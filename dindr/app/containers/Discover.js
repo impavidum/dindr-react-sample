@@ -7,27 +7,68 @@ import {
   View,
   StyleSheet,
   TouchableHighlight,
+  Image,
+  ScrollView
 } from 'react-native';
 
 class Discover extends Component {
-
+  
+  constructor(props){
+    super(props);
+    this.state = {
+      images: [
+        {
+          path: require('../images/rest1.jpg')
+        },
+        {
+          path: require('../images/rest2.jpg')
+        },
+        {
+          path: require('../images/rest3.jpg')
+        },
+        {
+          path: require('../images/rest4.jpg')
+        },
+        {
+          path: require('../images/rest5.jpg')
+        },
+        
+      ]
+    };
+  }
   render() {
     const {user} = this.props
     return (
-      <View style={styles.container}>
-        <Text>Some Discover page stuff goes here..</Text>
-        <Text>Like: {user.name}</Text>
-      </View>
+      <ScrollView style={styles.container}>
+        {this.state.images.map((image, index)=>{
+          return (
+            <Image key={index} source={image.path} style={styles.image}/>
+          )
+        })}
+
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 22,
+    paddingTop: 22,
+    paddingBottom: 22,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  image: {
+    flex: 1,
+    width: null,
+    height: 200,
+    borderRadius: 5,
+    marginLeft: 22,
+    marginRight: 22,
+    marginBottom: 22,
+   alignSelf: 'stretch',
+
   }
 });
 

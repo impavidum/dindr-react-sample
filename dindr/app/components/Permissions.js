@@ -13,11 +13,19 @@ class PermissionsWidget extends Component {
       .requestContacts
       .bind(this)
 
+    this.requestLocation = this
+      .requestLocation
+      .bind(this)
+
+    this.requestNotifications = this
+      .requestNotifications
+      .bind(this)
+
   }
 
   requestContacts() {
 
-    // Works on both iOS and Android
+    // Alert user with request
     Alert.alert('"Dindr" would like to access your contacts', 'So we can connect you with friends on Dindr.', [
       {
         text: 'Cancel',
@@ -27,14 +35,63 @@ class PermissionsWidget extends Component {
         text: 'OK',
         onPress: () => {
           console.log('hit')
-          this.props.actions.enableContacts();
-          
-          // Permissions
-          //   .requestPermission('contacts')
-          //   .then(response => {
-          //     console.log('done')
-          //     this.props.actions.enableContacts();
-          //   });
+          this
+            .props
+            .actions
+            .enableContacts();
+
+          // Permissions   .requestPermission('contacts')   .then(response => {
+          // console.log('done')     this.props.actions.enableContacts();   });
+        }
+      }
+    ], {cancelable: false})
+
+  }
+
+   requestLocation() {
+
+    // Alert user with request
+    Alert.alert('"Dindr" would like to access your location', 'We will help you find nearby diners and places to eat.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      }, {
+        text: 'OK',
+        onPress: () => {
+          console.log('hit')
+          this
+            .props
+            .actions
+            .enableLocation();
+
+          // Permissions   .requestPermission('contacts')   .then(response => {
+          // console.log('done')     this.props.actions.enableContacts();   });
+        }
+      }
+    ], {cancelable: false})
+
+  }
+
+   requestNotifications() {
+
+    // Alert user with request
+    Alert.alert('"Dindr" would like to send you notifications', 'We will send you meal-related updates.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      }, {
+        text: 'OK',
+        onPress: () => {
+          console.log('hit')
+          this
+            .props
+            .actions
+            .enableNotifications();
+
+          // Permissions   .requestPermission('contacts')   .then(response => {
+          // console.log('done')     this.props.actions.enableContacts();   });
         }
       }
     ], {cancelable: false})
@@ -63,9 +120,22 @@ class PermissionsWidget extends Component {
           onPress={() => {
           this.requestContacts()
         }}/>}
+        {user.contactsEnabled && <Button
+          icon={{
+          name: 'check',
+          color: 'white'
+        }}
+          color="white"
+          fontSize={18}
+          fontWeight='500'
+          title='Contacts Allowed!'
+          buttonStyle={styles.activeButtons}
+          borderRadius={25}
+          />}
         <Text style={styles.smallInstructions}>We’ll help find your hungry friends who are down to eat with you.</Text>
 
-        <Button
+
+        {!user.locationEnabled && <Button
           icon={{
           name: 'place',
           color: pink
@@ -75,10 +145,26 @@ class PermissionsWidget extends Component {
           fontWeight='500'
           title='Enable Location'
           buttonStyle={styles.buttons}
-          borderRadius={25}/>
+          borderRadius={25}
+          onPress={() => {
+          this.requestLocation()
+        }}/>}
+        {user.locationEnabled && <Button
+          icon={{
+          name: 'check',
+          color: 'white'
+        }}
+          color="white"
+          fontSize={18}
+          fontWeight='500'
+          title='Location Enabled!'
+          buttonStyle={styles.activeButtons}
+          borderRadius={25}
+          />}
         <Text style={styles.smallInstructions}>We’ll match you with great local restaurants and nearby dining groups.</Text>
 
-        <Button
+
+{!user.notificationsEnabled && <Button
           icon={{
           name: 'notifications',
           color: pink
@@ -88,7 +174,22 @@ class PermissionsWidget extends Component {
           fontWeight='500'
           title='Allow Notifications'
           buttonStyle={styles.buttons}
-          borderRadius={25}/>
+          borderRadius={25}
+          onPress={() => {
+          this.requestNotifications()
+        }}/>}
+        {user.notificationsEnabled && <Button
+          icon={{
+          name: 'check',
+          color: 'white'
+        }}
+          color="white"
+          fontSize={18}
+          fontWeight='500'
+          title='Notifications Allowed!'
+          buttonStyle={styles.activeButtons}
+          borderRadius={25}
+          />}
         <Text style={styles.smallInstructions}>We’ll send you important notifications so
           you’ll never miss an invitation to dine out.</Text>
       </View>
@@ -121,6 +222,13 @@ const styles = StyleSheet.create({
   },
   buttons: {
     backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: pink,
+    marginBottom: 10,
+    width: 100 + '%'
+  },
+  activeButtons: {
+    backgroundColor: pink,
     borderWidth: 2,
     borderColor: pink,
     marginBottom: 10,

@@ -15,4 +15,4 @@ const actions = {
   enableContacts,
   enableNotifications,
 };
-// module.exports = actions;
+module.exports = actions;

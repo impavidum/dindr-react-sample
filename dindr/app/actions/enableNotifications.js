@@ -1,7 +1,7 @@
-import { LOGIN } from './const';
+import { ENABLE_NOTIFICATIONS } from './const';
 
 function action(parameter) {
-  return { type: LOGIN, parameter };
+  return { type: ENABLE_NOTIFICATIONS, parameter };
 }
 
 module.exports = action;

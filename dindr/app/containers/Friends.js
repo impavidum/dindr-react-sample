@@ -14,6 +14,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import PermissionsWidget from '../components/Permissions'
+import FindFriends from '../components/FindFriends'
 
 
 class Friends extends Component {
@@ -28,6 +29,10 @@ class Friends extends Component {
     this.hideModal = this
       .hideModal
       .bind(this)
+
+    this.next = this
+      .next
+      .bind(this)
   }
 
   showModal(visible) {
@@ -38,11 +43,17 @@ class Friends extends Component {
     this.setState({modalVisible: false});
   }
 
+  next() {
+    this.setState({permissionsSet: true});
+  }
+
   state = {
     modalVisible: false,
+    permissionsSet: false
   }
 
   componentDidMount() {
+
     const {user} = this.props
     const noneSet = !user.contactsEnabled && !user.notificationsEnabled && !user.locationEnabled
     if(noneSet) {
@@ -84,22 +95,51 @@ class Friends extends Component {
             this.hideModal()
           }}
             style={styles.closeButton}/>
-          <PermissionsWidget user={user} actions={actions}/>
-          <Button
-          disabled={noneSet}
+
+          {!this.state.permissionsSet && <PermissionsWidget user={user} actions={actions}/>}
+          {this.state.permissionsSet && <FindFriends user={user} actions={actions}/>}
+          
+
+          {noneSet && !this.state.permissionsSet && <Button
           color={'grey'}
+          backgroundColor={ltgrey}
+          fontSize={18}
+          fontWeight='500'
+          title='Next'
+          borderRadius={25}
+          style={styles.nextButtonDisabled}/>}
+
+          {!noneSet && !this.state.permissionsSet && <Button
+          color="white"
+          backgroundColor={green}
           fontSize={18}
           fontWeight='500'
           title='Next'
           borderRadius={25}
           onPress={() => {
+            this.next()
+          }} style={styles.nextButton}/>}
+
+          {this.state.permissionsSet && <Button
+          color={"white"}
+          backgroundColor={green}
+          fontSize={18}
+          fontWeight='500'
+          title='Done'
+          borderRadius={25}
+          onPress={() => {
             this.hideModal()
-          }} style={styles.nextButton}/>
+          }} style={styles.doneButton}/>}
+
         </Modal>
       </ScrollView>
     );
   }
 }
+
+const pink = '#FF7769'
+const ltgrey = '#F2F1EF'
+const green = '#23DBB8'
 
 const styles = StyleSheet.create({
   closeButton: {
@@ -109,8 +149,17 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     width: 50 + '%',
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+  },
+  nextButtonDisabled: {
+    width: 50 + '%',
+    alignSelf: 'center',
+  },
+  doneButton: {
+    width: 50 + '%',
+    alignSelf: 'center',
+    marginTop: 100
+  },
 });
 
 Friends.propTypes = {
